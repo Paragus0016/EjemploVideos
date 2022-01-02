@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@*@using (Ajax.BeginForm("SaveVideos", "Videos", null, new AjaxOptions
+{
+    HttpMethod = "Post",
+    UpdateTargetId = "ajaxtarget",
+    LoadingElementId = "image_loading",
+    InsertionMode = InsertionMode.Replace
+}, new { @class = "form-horizontal user d-block", id = "videoForm", role = "form", enctype = "multipart/form-data" }))
+{
+    @Html.ValidationSummary("", new { @class = "text-error" })
+    <div class="form-group row" id="ajaxtarget">
+        <h5 class="col-12">Ingrese Video</h5>
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <input type="file"  name="file" id="file" />
+        </div>
+        <div class="col-auto">
+            <input type="submit" class="btn btn-success" id="videoFormBTN" value="Buscar" />
+        </div>
+    </div>
+    <hr class="sidebar-divider">
+}*@
+
+<form action="javascripts:;">
+    <input type="file" name="fileUpload" id="fileUpload" accept="video/msvideo, video/avi, video/x-msvideo, video/mpeg, video/quicktime, application/pdf"/>
+    <input type="button" id="btn-send-ajax" value="Enviar" />
+</form>
+
+@section _scripts{<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btn-send-ajax").click(function () {
+
+            var selectFile = ($("#fileUpload"))[0].files[0];
+            var dataString = new FormData();
+
+            dataString.append("fileUpload", selectFile)
+            if (!selectFile) {
+                alert("No se ha cargado ningún archivo");
+            } else {
+                $.ajax({
+                    url: '@Url.Action("SaveVideos", "Videos")',
+                    type: "POST",
+                    data: dataString,
+                    contentType: false,
+                    processData: false,
+                    async: false,
+                    success: function (data) {
+                        if (typeof (data.Value) != "undefined") {
+                            alert(data.Message);
+                        } else {
+                            alert("Error no identificado");
+                        }
+                    },
+                    error: function (data) { }
+                });
+            }
+        });
+    });
+</script>
+    }
